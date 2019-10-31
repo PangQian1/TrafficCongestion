@@ -281,7 +281,7 @@ public class Main {
 			e.printStackTrace();
 		}
 	}
-	public static Map<String,List<String>> addGpsPointCmid(String path,Map<Integer,String> idWithPointMessage){
+	public static Map<String,List<String>> addGpsPointCmid(String path,Map<Integer,String> idWithPointMessage){//mid行号，进入linkID;退出linkID;CondType
 		BufferedReader reader=getReader(path,"GBK");
 		String line="";
 		int lineId=0;
@@ -327,10 +327,10 @@ public class Main {
 			String mif_file_path, String pname_file_path, String poi_file_path, String rlname_file_path,
 			String rname_file_path) {
 		HashMap<String, StationInMap> poi_StationInMap_hash = new HashMap<String, StationInMap>(); // poi的ID和名字对应
-		HashMap<String, String> poi_Name_hash = new HashMap<String, String>(); // poi的ID和名字对应
+		HashMap<String, String> poi_Name_hash = new HashMap<String, String>(); // poi的ID和名字对应       把所有收费站找了出来
 		HashMap<String, List<String>> id_route_id = new HashMap<String, List<String>>();
 		HashMap<String, List<String>> route_id_name = new HashMap<String, List<String>>();
-		HashMap<String, RoadLink> id_Roadlink = Main.getTopology_ID_RoadLink(mid_file_path, mif_file_path);
+		HashMap<String, RoadLink> id_Roadlink = Main.getTopology_ID_RoadLink(mid_file_path, mif_file_path);//linkID，RoadLink
 		// List<String> poi_station_array = new ArrayList<String>(300); //
 		// poi_name_hash的key的集合，为了方便不用iterator
 		// List<String> roadlink_id_array = new ArrayList<String>(300);
@@ -340,8 +340,8 @@ public class Main {
 			String Czhejiang2Mid="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mid";
 			String Czhejiang2Mif="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mif";
 	    	Map<Integer,String> idWithPointMessage=new HashMap<>();
-	    	readCMid(Czhejiang2Mid,idWithPointMessage);
-	    	Map<String,List<String>> mapGpsLinkId=addGpsPointCmid(Czhejiang2Mif,idWithPointMessage);
+	    	readCMid(Czhejiang2Mid,idWithPointMessage);//行号，进入linkID;退出linkID;CondType
+	    	Map<String,List<String>> mapGpsLinkId=addGpsPointCmid(Czhejiang2Mif,idWithPointMessage);//gps(lon lat),进入linkID；退出linkID
 	    	
 			BufferedReader pname = new BufferedReader(new FileReader(pname_file_path));
 			while ((line = pname.readLine()) != null) {
