@@ -13,7 +13,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * 
+ * @author PQ
+ * 合并原始数据，每15分钟合并为一条数据
+ */
 public class Tool {
 
 	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM1";

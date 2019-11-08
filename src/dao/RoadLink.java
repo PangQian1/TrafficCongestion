@@ -253,6 +253,35 @@ public class RoadLink {
 				.append(String.valueOf(stake_end)).append(",").append(String.valueOf(stake_direction));
 		return return_str.toString();
 	}
+	
+	// 输出格式为
+	// ID,下一ID，上一ID，长度，是否匝道，道路类型，所属高速编号，起点经度、起点纬度、车道数，mid文件中行号，收费站，方向。
+	public String toStringForTidal() {
+		StringBuilder return_str = new StringBuilder(ID);
+		StringBuilder next_ID_list = new StringBuilder("");
+		StringBuilder pre_ID_list = new StringBuilder("");
+		if (next_ID != null) {
+			int length = next_ID.size();
+			for (int i = 0; i < length - 1; i++) {
+				next_ID_list.append(next_ID.get(i)).append("#");
+			}
+			next_ID_list.append(next_ID.get(length - 1));
+		}
+		if (pre_ID != null) {
+			int length = pre_ID.size();
+			for (int i = 0; i < length - 1; i++) {
+				pre_ID_list.append(pre_ID.get(i)).append("#");
+			}
+			pre_ID_list.append(pre_ID.get(length - 1));
+		}
+		return_str.append(",").append(next_ID_list.toString()).append(",").append(pre_ID_list.toString()).append(",")
+				.append(String.valueOf(length)).append(",").append(String.valueOf(isRamp)).append(",")
+				.append(String.valueOf(road_attribute)).append(",").append(String.valueOf(highway_ID)).append(",")
+				.append(getFirstLonLat().toString()).append(",").append(String.valueOf(lane)).append(",")
+				.append(String.valueOf(line)).append(",").append(",").append(String.valueOf(station)).append(",")
+				.append(String.valueOf(direction));
+		return return_str.toString();
+	}
 
 	public String toString_Short() {   //这个函数返回简短版的路链性质，主要是为了突出同一条高速公路编号下的所有路链之和
 		StringBuilder return_str = new StringBuilder(ID);
