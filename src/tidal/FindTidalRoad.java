@@ -23,6 +23,11 @@ import dao.RoadLink;
 import dao.StationInMap;
 import util.Config;
 
+/**
+ * 与generateTopology包里的Main.java几近一致
+ * @author PQ
+ *
+ */
 
 public class FindTidalRoad {
 	public static void main(String[] args) {

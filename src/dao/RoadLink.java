@@ -278,7 +278,7 @@ public class RoadLink {
 				.append(String.valueOf(length)).append(",").append(String.valueOf(isRamp)).append(",")
 				.append(String.valueOf(road_attribute)).append(",").append(String.valueOf(highway_ID)).append(",")
 				.append(getFirstLonLat().toString()).append(",").append(String.valueOf(lane)).append(",")
-				.append(String.valueOf(line)).append(",").append(",").append(String.valueOf(station)).append(",")
+				.append(String.valueOf(line)).append(",").append(String.valueOf(station)).append(",")
 				.append(String.valueOf(direction));
 		return return_str.toString();
 	}
