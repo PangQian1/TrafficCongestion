@@ -1,4 +1,4 @@
-package main;
+package dataPreprocess;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,8 +20,8 @@ import java.util.Map;
  */
 public class Tool {
 
-	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM1";
-	private static String mergeDataBy15MinPath = "I:\\programData\\trafficCongetion\\res(9-10)";
+	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM";
+	private static String mergeDataBy15MinPath = "I:\\programData\\trafficCongetion\\res";
 	
 	/**
 	 * 合并原始数据，每15分钟合并为一条数据

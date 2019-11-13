@@ -62,7 +62,9 @@ public class TopologyWithCongestion {
 					String status = lineArray[7];
 					
 					if(dir != 1){//不要双向的
-						String key = linkID + ":" + dir;
+						//改动1
+						//String key = linkID + ":" + dir;
+						String key = linkID;
 						int index = getArrayIndex(time.substring(8));
 						if(conMap.containsKey(key)){
 							ArrayList<String> congestionList = conMap.get(key);
@@ -105,7 +107,9 @@ public class TopologyWithCongestion {
 				if(lineArray.length == 13) {
 					String linkID = lineArray[0];
 					String dir = lineArray[12];
-					topologyMap.put(linkID+":"+dir, line);
+					//改动2
+					//topologyMap.put(linkID+":"+dir, line);
+					topologyMap.put(linkID, line);
 				}
 			}
 			reader.close();	
@@ -145,7 +149,7 @@ public class TopologyWithCongestion {
 						
 						int curField = topologyMap.get(key).split(",").length;//该行当前的字段数
 						String fillStr = "";//填补字段
-						int limit = curField - field_num + 1;
+						int limit = field_num - curField + 1;
 						for(int m = 0; m < limit; m++) {
 							fillStr += ",";
 						}
@@ -184,7 +188,7 @@ public class TopologyWithCongestion {
 	
 	public static void main(String[] args) {
 		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰)", 
-				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\fusionRes.csv");
+				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes1.csv");
 	}
 
 }
