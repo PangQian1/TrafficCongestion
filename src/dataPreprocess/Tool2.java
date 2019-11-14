@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DecimalFormat;
@@ -13,6 +14,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import tidal.TopologyWithCongestion;
 /**
  * 
  * @author PQ
@@ -29,8 +32,9 @@ public class Tool2 {
 	 * @param outPath
 	 */
 	public static void mergeDataBy15Min(String inPath, String outPath) {
-		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();//以车为单位，用以存放异常车牌的所有通行记录
-		Map<String, String> detectConflictMap = new HashMap<>();
+		//<timePeriod,<linkID以及一系列属性拼接的字符串，拥堵状态+旅行时间List>>
+		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();
+		Map<String, String> detectConflictMap = new HashMap<String, String>();
 		Map<String, String> conflictLinkIDMap = new HashMap<>();
 		
 		
@@ -84,7 +88,7 @@ public class Tool2 {
 									+","+roadLength+","+roadClass+","+linkType;
 							
 							//检测同一linkID同一分钟但不同方向的数据记录
-							String time_linkID = time.substring(0, 10) + objectID;
+							String time_linkID = time.substring(0, 12) + objectID;
 							if(detectConflictMap.containsKey(time_linkID)) {
 								conflictLinkIDMap.put(objectID, "");
 							}else {
@@ -122,11 +126,25 @@ public class Tool2 {
 					
 					writeData(linkDataMap, conflictLinkIDMap, writer);
 					linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();
+					detectConflictMap = new HashMap<String, String>();
 				}
 				System.out.println(resPath + " write finish!!");
 				writer.flush();
 				writer.close();
 			}
+			
+			int count = 0;
+			Map<String, String> topologyMap = TopologyWithCongestion.getTopologyMap("I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv");
+			BufferedWriter writer2=new BufferedWriter(new FileWriter("I:\\programData\\trafficCongetion\\潮汐道路研究\\多方向linkID2.csv"));
+			for(String linkID: conflictLinkIDMap.keySet()) {
+				if(topologyMap.containsKey(linkID)) {
+					writer2.write(linkID + "\n");
+					count++;
+				}
+			}
+			System.out.println(count);
+			writer2.flush();
+			writer2.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,7 +155,7 @@ public class Tool2 {
 	public static void writeData(Map<String, Map<String, ArrayList<String>>> linkDataMap, Map<String, String> conflictMap, BufferedWriter writer){
 		DecimalFormat df = new DecimalFormat("######.00"); 
 		try {
-		
+			
 			for (String timePeriod : linkDataMap.keySet()) {
 				Map<String, ArrayList<String>> dataMap = linkDataMap.get(timePeriod);
 				for(String key : dataMap.keySet()){
@@ -145,7 +163,7 @@ public class Tool2 {
 					//检查是否存在冲突linkID，如果存在，直接忽略，并且输出linkID
 					String[] info = key.split(",");
 					if(conflictMap.containsKey(info[1])) {
-						System.out.println(info[1]);
+						//System.out.println(info[1]);
 						continue;
 					}
 					
@@ -170,7 +188,7 @@ public class Tool2 {
 			}
 			
 			writer.flush();
-			//writer.close();
+			//writer.close();此处不能close！！！因为还没有写完
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -188,7 +188,7 @@ public class TopologyWithCongestion {
 	
 	public static void main(String[] args) {
 		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰)", 
-				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes1.csv");
+				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配).csv");
 	}
 
 }
