@@ -29,9 +29,9 @@ import util.Config;
  *
  */
 
-public class FindTidalRoad {
+public class GetSimplifiedTopology {
 	public static void main(String[] args) {
-		HashMap<String, RoadLink> id_Roadlink = FindTidalRoad.getTopology_ID_RoadLink_RoadName_Station(
+		HashMap<String, RoadLink> id_Roadlink = GetSimplifiedTopology.getTopology_ID_RoadLink_RoadName_Station(
 				"I:/programData/trafficCongetion/北京地图数据/beijing/Rbj.MID",
 				"I:/programData/trafficCongetion/北京地图数据/beijing/Rbj.MIF",
 				"I:/programData/trafficCongetion/北京地图数据/beijing/other/PNamebeijing.mid",
@@ -312,7 +312,7 @@ public class FindTidalRoad {
 		HashMap<String, String> poi_Name_hash = new HashMap<String, String>(); // poi的ID和名字对应       把所有收费站找了出来
 		HashMap<String, List<String>> id_route_id = new HashMap<String, List<String>>();
 		HashMap<String, List<String>> route_id_name = new HashMap<String, List<String>>();
-		HashMap<String, RoadLink> id_Roadlink = FindTidalRoad.getTopology_ID_RoadLink(mid_file_path, mif_file_path);//linkID，RoadLink
+		HashMap<String, RoadLink> id_Roadlink = GetSimplifiedTopology.getTopology_ID_RoadLink(mid_file_path, mif_file_path);//linkID，RoadLink
 		// List<String> poi_station_array = new ArrayList<String>(300); //
 		// poi_name_hash的key的集合，为了方便不用iterator
 		// List<String> roadlink_id_array = new ArrayList<String>(300);

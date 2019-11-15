@@ -8,12 +8,15 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.SQLNonTransientConnectionException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sound.midi.Receiver;
 
 import tidal.TopologyWithCongestion;
 /**
@@ -25,6 +28,12 @@ public class Tool2 {
 
 	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM1";
 	private static String mergeDataBy15MinPath = "I:\\programData\\trafficCongetion\\res(早晚高峰除多方向linkID)";
+	private static String bjTopolog_withoutNullPath = "I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv";
+	private static String conflictLinkIDPath = "I:\\programData\\trafficCongetion\\潮汐道路研究\\多方向linkID(与拓扑文件重合linkID).csv";
+	
+	public static void main(String[] args) {
+		mergeDataBy15Min(originDataPath, mergeDataBy15MinPath);
+	}
 	
 	/**
 	 * 合并原始数据，每15分钟合并为一条数据
@@ -134,8 +143,8 @@ public class Tool2 {
 			}
 			
 			int count = 0;
-			Map<String, String> topologyMap = TopologyWithCongestion.getTopologyMap("I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv");
-			BufferedWriter writer2=new BufferedWriter(new FileWriter("I:\\programData\\trafficCongetion\\潮汐道路研究\\多方向linkID2.csv"));
+			Map<String, String> topologyMap = TopologyWithCongestion.getTopologyMap(bjTopolog_withoutNullPath);
+			BufferedWriter writer2=new BufferedWriter(new FileWriter(conflictLinkIDPath));
 			for(String linkID: conflictLinkIDMap.keySet()) {
 				if(topologyMap.containsKey(linkID)) {
 					writer2.write(linkID + "\n");
@@ -168,21 +177,23 @@ public class Tool2 {
 					}
 					
 					ArrayList<String> dataList = dataMap.get(key);
-					String status_ave = "";
 					String travelTime_ave = "";
-					int status_sum = 0;
+					int status_num = 0;
 					int travelTime_sum = 0;
 					int num = 0;			
 					for(String dt : dataList) {
-						status_sum += Integer.parseInt(dt.split(",")[0]);
+						if(Integer.parseInt(dt.split(",")[0]) == 3) status_num++;
 						travelTime_sum += Integer.parseInt(dt.split(",")[1]);
 						num++;
 					}
 					
-					status_ave = df.format((double)status_sum/num);
 					travelTime_ave = df.format((double)travelTime_sum/num);
-									
-					String rec = key+","+status_ave+","+travelTime_ave;	
+					
+					String rec;
+
+					rec = key+","+status_num+"\\"+num+","+travelTime_ave;	
+					
+					
 					writer.write(rec + "\n");			
 				}
 			}
@@ -197,8 +208,5 @@ public class Tool2 {
 
 	}
 	
-	public static void main(String[] args) {
-		mergeDataBy15Min(originDataPath, mergeDataBy15MinPath);
-	}
 
 }

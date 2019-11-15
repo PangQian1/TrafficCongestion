@@ -20,6 +20,11 @@ import org.omg.PortableInterceptor.IORInterceptor;
 
 public class TopologyWithCongestion {
 	
+	public static void main(String[] args) {
+		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰除多方向linkID)", 
+				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配).csv");
+	}
+	
 	public static int switchDirToMap(String direction){
 		int dir = Integer.parseInt(direction);
 		if(dir == 0) return 2;
@@ -140,7 +145,9 @@ public class TopologyWithCongestion {
 						ArrayList<String> conList = conMap.get(key);
 						String conIndex = "";//
 						for(int j = 0; j < conList.size(); j++) {
-							if(j < conList.size()-1) {
+							if(j == (conList.size()/2-1)) {
+								conIndex += conList.get(j) + "  ";
+							}else if(j < conList.size()-1) {
 								conIndex += conList.get(j) + ":";
 							}else {
 								conIndex += conList.get(j);
@@ -171,7 +178,7 @@ public class TopologyWithCongestion {
 		try {
 			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(path), "utf-8");
 			BufferedWriter writer = new BufferedWriter(writerStream);
-			writer.write("ID,下一ID,上一ID,长度,是否匝道,道路类型,所属高速编号,起点经度,起点纬度,车道数,mid文件中行号,收费站,方向,13,14,15\n");
+			writer.write("id,下一ID,上一ID,长度,是否匝道,道路类型,所属高速编号,起点经度,起点纬度,车道数,mid文件中行号,收费站,方向,13,14,15\n");
 			for(String id:map.keySet()){
 				writer.write(map.get(id));
 				writer.write("\n");
@@ -186,9 +193,5 @@ public class TopologyWithCongestion {
 		System.out.println(path + "  write finish!!");
 	}
 	
-	public static void main(String[] args) {
-		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰)", 
-				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配).csv");
-	}
 
 }
