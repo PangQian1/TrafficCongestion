@@ -23,6 +23,8 @@ import tidal.TopologyWithCongestion;
  * 
  * @author PQ
  * 合并原始数据，每15分钟合并为一条数据
+ * 把存在多个方向的linkID剔除了
+ * 更新status字段取值：对于每条linkID，取值为“状态为3的记录有多少条\记录数目”
  */
 public class Tool2 {
 
@@ -162,7 +164,7 @@ public class Tool2 {
 	
 	
 	public static void writeData(Map<String, Map<String, ArrayList<String>>> linkDataMap, Map<String, String> conflictMap, BufferedWriter writer){
-		DecimalFormat df = new DecimalFormat("######.00"); 
+		DecimalFormat df = new DecimalFormat("0.##"); 
 		try {
 			
 			for (String timePeriod : linkDataMap.keySet()) {

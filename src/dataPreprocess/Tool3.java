@@ -5,24 +5,37 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.sql.SQLNonTransientConnectionException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sound.midi.Receiver;
+
+import tidal.TopologyWithCongestion;
 /**
  * 
  * @author PQ
  * 合并原始数据，每15分钟合并为一条数据
- * status字段取值：简单的算术平均
+ * 把存在多个方向的linkID剔除了
+ * 更新status字段取值：即在15min内，将每分钟的status字段数值减1求和，并求算术平均（仅针对拥堵等级为1，2或3的数据，如有其它情况，输出处理）
  */
-public class Tool {
+public class Tool3 {
 
-	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM";
-	private static String mergeDataBy15MinPath = "I:\\programData\\trafficCongetion\\res";
+	private static String originDataPath = "I:\\programData\\trafficCongetion\\TJAM1";
+	private static String mergeDataBy15MinPath = "I:\\programData\\trafficCongetion\\res(早晚高峰除多方向linkID)_Status3";
+	private static String bjTopolog_withoutNullPath = "I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv";
+	private static String conflictLinkIDPath = "I:\\programData\\trafficCongetion\\潮汐道路研究\\多方向linkID(与拓扑文件重合linkID).csv";
+	
+	public static void main(String[] args) {
+		mergeDataBy15Min(originDataPath, mergeDataBy15MinPath);
+	}
 	
 	/**
 	 * 合并原始数据，每15分钟合并为一条数据
@@ -30,8 +43,12 @@ public class Tool {
 	 * @param outPath
 	 */
 	public static void mergeDataBy15Min(String inPath, String outPath) {
-		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();//以车为单位，用以存放异常车牌的所有通行记录
-
+		//<timePeriod,<linkID以及一系列属性拼接的字符串，拥堵状态+旅行时间List>>
+		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();
+		Map<String, String> detectConflictMap = new HashMap<String, String>();
+		Map<String, String> conflictLinkIDMap = new HashMap<>();
+		
+		
 		File file = new File(inPath);
 		List<String> list = Arrays.asList(file.list());	
 		
@@ -72,7 +89,7 @@ public class Tool {
 							String roadClass = lineArray[8].trim();//道路等级，比如乡镇街道之类
 							String linkType = lineArray[9].trim();//linkType，比如匝道之类					
 							
-							String status = lineArray[24].trim();//拥堵等级*
+							int status = reCalStatus(lineArray[24].trim());//拥堵等级*
 							String travelTime = lineArray[25].trim();//旅行时间*
 
 							int min = Integer.parseInt(lineArray[0].trim().split("_")[0].substring(10));
@@ -80,6 +97,14 @@ public class Tool {
 							
 							String key = time.substring(0, 10)+"0"+timePeriod + ","+objectID+","+directionFlag+","+regionID
 									+","+roadLength+","+roadClass+","+linkType;
+							
+							//检测同一linkID同一分钟但不同方向的数据记录
+							String time_linkID = time.substring(0, 12) + objectID;
+							if(detectConflictMap.containsKey(time_linkID)) {
+								conflictLinkIDMap.put(objectID, "");
+							}else {
+								detectConflictMap.put(time_linkID, "");
+							}
 
 							if(linkDataMap.containsKey(timePeriod)) {
 								Map<String, ArrayList<String>> dataMap = linkDataMap.get(timePeriod);
@@ -110,13 +135,27 @@ public class Tool {
 					reader.close();	
 					System.out.println(pathIn + " read finish!");
 					
-					writeData(linkDataMap, writer);
+					writeData(linkDataMap, conflictLinkIDMap, writer);
 					linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();
+					detectConflictMap = new HashMap<String, String>();
 				}
 				System.out.println(resPath + " write finish!!");
 				writer.flush();
 				writer.close();
 			}
+			
+			/*			int count = 0;
+						Map<String, String> topologyMap = TopologyWithCongestion.getTopologyMap(bjTopolog_withoutNullPath);
+						BufferedWriter writer2=new BufferedWriter(new FileWriter(conflictLinkIDPath));
+						for(String linkID: conflictLinkIDMap.keySet()) {
+							if(topologyMap.containsKey(linkID)) {
+								writer2.write(linkID + "\n");
+								count++;
+							}
+						}
+						System.out.println(count);
+						writer2.flush();
+						writer2.close();*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -124,36 +163,47 @@ public class Tool {
 	}
 	
 	
-	public static void writeData(Map<String, Map<String, ArrayList<String>>> linkDataMap, BufferedWriter writer){
+	public static void writeData(Map<String, Map<String, ArrayList<String>>> linkDataMap, Map<String, String> conflictMap, BufferedWriter writer){
 		DecimalFormat df = new DecimalFormat("0.##"); 
 		try {
-		
+			
 			for (String timePeriod : linkDataMap.keySet()) {
 				Map<String, ArrayList<String>> dataMap = linkDataMap.get(timePeriod);
 				for(String key : dataMap.keySet()){
 					
+					//检查是否存在冲突linkID，如果存在，直接忽略，并且输出linkID
+					String[] info = key.split(",");
+					if(conflictMap.containsKey(info[1])) {
+						//System.out.println(info[1]);
+						continue;
+					}
+					
 					ArrayList<String> dataList = dataMap.get(key);
-					String status_ave = "";
 					String travelTime_ave = "";
-					int status_sum = 0;
+					String status_coe = "";
+					int status_num = 0;
 					int travelTime_sum = 0;
 					int num = 0;			
 					for(String dt : dataList) {
-						status_sum += Integer.parseInt(dt.split(",")[0]);
+						status_num += Integer.parseInt(dt.split(",")[0]);
 						travelTime_sum += Integer.parseInt(dt.split(",")[1]);
 						num++;
 					}
 					
-					status_ave = df.format((double)status_sum/num);
 					travelTime_ave = df.format((double)travelTime_sum/num);
-									
-					String rec = key+","+status_ave+","+travelTime_ave;	
+					status_coe = df.format((double)status_num/num);
+					
+					String rec;
+
+					rec = key+","+status_coe+","+travelTime_ave;	
+					
+					
 					writer.write(rec + "\n");			
 				}
 			}
 			
 			writer.flush();
-			//writer.close();
+			//writer.close();此处不能close！！！因为还没有写完
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,8 +212,15 @@ public class Tool {
 
 	}
 	
-	public static void main(String[] args) {
-		mergeDataBy15Min(originDataPath, mergeDataBy15MinPath);
+	public static int reCalStatus(String status) {
+		int sta = Integer.parseInt(status);
+		if(sta == 1 || sta == 2 || sta == 3) {
+			sta -= 1;
+		}else {
+			System.out.println(sta);
+			sta = 0;
+		}
+		
+		return sta;
 	}
-
 }

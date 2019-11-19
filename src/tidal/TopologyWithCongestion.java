@@ -21,8 +21,9 @@ import org.omg.PortableInterceptor.IORInterceptor;
 public class TopologyWithCongestion {
 	
 	public static void main(String[] args) {
-		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰除多方向linkID)", 
-				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv", "I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配).csv");
+		topologyWithCongestion("I:\\programData\\trafficCongetion\\res(早晚高峰除多方向linkID)_Status3", 
+				"I:\\programData\\trafficCongetion\\bjTopolog(withoutNull).csv",
+				"I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv");
 	}
 	
 	public static int switchDirToMap(String direction){
