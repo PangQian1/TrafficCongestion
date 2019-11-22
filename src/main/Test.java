@@ -5,6 +5,11 @@ import java.util.ArrayList;
 public class Test {
 
 	public static void main(String[] args) {
+		int size = 14;
+		for(int i = 13; i < size; i++) {
+			System.out.println(i);
+		}
+		
 		ArrayList<String> arrayList = new ArrayList<>();
 		arrayList.add("a");
 		arrayList.add("b");

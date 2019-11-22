@@ -179,7 +179,7 @@ public class TopologyWithCongestion {
 		try {
 			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(path), "utf-8");
 			BufferedWriter writer = new BufferedWriter(writerStream);
-			writer.write("id,下一ID,上一ID,长度,是否匝道,道路类型,所属高速编号,起点经度,起点纬度,车道数,mid文件中行号,收费站,方向,13,14,15\n");
+			writer.write("id,下一ID,上一ID,长度,是否匝道,道路类型,Rname,起点经度,起点纬度,车道数,mid文件中行号,收费站,方向,13,14,15\n");
 			for(String id:map.keySet()){
 				writer.write(map.get(id));
 				writer.write("\n");
@@ -193,6 +193,74 @@ public class TopologyWithCongestion {
 		
 		System.out.println(path + "  write finish!!");
 	}
+
 	
+	//与原始方法的唯一区别在于将一天内的早晚高峰数据从隶属于同一数据字段划分为两个字段——对于CSV文件来说，即用逗号隔开
+	public static void topologyWithCongestionV2(String tjamPath, String topologyPath, String topoWithConPath){
+		int field_num = 13;//简单拓扑文件所应包括的字段数
+		try {
+			Map<String, String> topologyMap = getTopologyMap(topologyPath);
+			
+			File file = new File(tjamPath);
+			List<String> list = Arrays.asList(file.list());	
+			
+			for (int i = 0; i < list.size(); i++) {
+
+				String path = tjamPath + "/" + list.get(i);
+				Map<String, ArrayList<String>> conMap = getCongestionMap(path);
+				
+				for(String key:conMap.keySet()) {
+					if(topologyMap.containsKey(key)) {
+						ArrayList<String> conList = conMap.get(key);
+						String conIndex = "";//
+						for(int j = 0; j < conList.size(); j++) {
+							if(j == conList.size()-1) {
+								conIndex += conList.get(j);
+							}else if((j+1) % 8 == 0) {
+								conIndex += conList.get(j) + ",";
+							}else{
+								conIndex += conList.get(j) + ":";
+							}
+						}
+						
+						int curField = topologyMap.get(key).split(",").length;//该行当前的字段数
+						String fillStr = "";//填补字段
+						int limit = field_num - curField + 1;
+						for(int m = 0; m < limit; m++) {
+							fillStr += ",";
+						}
+													
+						String value = topologyMap.get(key) + fillStr + conIndex;
+						topologyMap.put(key, value);
+					}
+				}
+				field_num += 2;
+			}
+			
+			writeV2(topoWithConPath, topologyMap);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void writeV2(String path, Map<String, String> map) {
+		try {
+			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(path), "utf-8");
+			BufferedWriter writer = new BufferedWriter(writerStream);
+			writer.write("id,下一ID,上一ID,长度,是否匝道,道路类型,Rname,起点经度,起点纬度,车道数,mid文件中行号,收费站,方向,"
+					+ "6.13-早高峰,6.13-晚高峰,6.14-早高峰,6.14-晚高峰,6.15-早高峰,6.15-晚高峰\n");
+			for(String id:map.keySet()){
+				writer.write(map.get(id));
+				writer.write("\n");
+			}
+
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(path + "  write finish!!");
+	}
 
 }
