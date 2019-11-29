@@ -14,15 +14,15 @@ import javax.naming.InitialContext;
 public class GetLinkIDInfo {
 	
 	public static void main(String[] args) {
-//		getLinkIDInfo("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv", 
-//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\杏石口桥-香泉桥\\linkID线路.csv",
-//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\杏石口桥-香泉桥\\杏石口桥-香泉桥_Status3.csv");
+		getLinkIDInfo("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv", 
+				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
+				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3.csv");
 		
 		//removeFrequence();
 		
 		getLinkIDInfoSum("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3v2.csv", 
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\学院桥-六道口\\linkID线路.csv",
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\学院桥-六道口\\学院桥-六道口_Status3_sum.csv");
+				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
+				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3_sum.csv");
 	}
 	
 	public static Map<String, String> getFusionMap(String fusionResPath){
