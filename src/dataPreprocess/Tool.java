@@ -30,8 +30,8 @@ public class Tool {
 	 * @param outPath
 	 */
 	public static void mergeDataBy15Min(String inPath, String outPath) {
-		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();//以车为单位，用以存放异常车牌的所有通行记录
-
+		//<时间段，<由各类信息组成的key，(拥堵等级，旅行时间)>>
+		Map<String, Map<String, ArrayList<String>>> linkDataMap = new HashMap<String, Map<String, ArrayList<String>>>();
 		File file = new File(inPath);
 		List<String> list = Arrays.asList(file.list());	
 		
