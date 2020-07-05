@@ -14,15 +14,26 @@ import javax.naming.InitialContext;
 public class GetLinkIDInfo {
 	
 	public static void main(String[] args) {
-		getLinkIDInfo("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv", 
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3.csv");
+//		getLinkIDInfo("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv", 
+//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
+//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3.csv");
+//		
+//		//removeFrequence();
+//		
+//		getLinkIDInfoSum("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3v2.csv", 
+//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
+//				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3_sum.csv");
+		
+		
+		getLinkIDInfo("E:\\G-1149\\trafficCongestion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3.csv", 
+				"E:\\G-1149\\trafficCongestion\\潮汐道路研究\\来广营桥\\linkID线路.csv",
+				"E:\\G-1149\\trafficCongestion\\潮汐道路研究\\来广营桥\\来广营桥_Status3.csv");
 		
 		//removeFrequence();
 		
-		getLinkIDInfoSum("I:\\programData\\trafficCongetion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3v2.csv", 
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\linkID线路.csv",
-				"I:\\programData\\trafficCongetion\\潮汐道路研究\\东四环北路（朝阳公园桥）\\东四环北路（朝阳公园桥）_Status3_sum.csv");
+		getLinkIDInfoSum("E:\\G-1149\\trafficCongestion\\潮汐道路研究\\fusionRes(去除方向匹配)_Status3v2.csv", 
+				"E:\\G-1149\\trafficCongestion\\潮汐道路研究\\来广营桥\\linkID线路.csv",
+				"E:\\G-1149\\trafficCongestion\\潮汐道路研究\\来广营桥\\来广营桥_Status3_sum.csv");
 	}
 	
 	public static Map<String, String> getFusionMap(String fusionResPath){
