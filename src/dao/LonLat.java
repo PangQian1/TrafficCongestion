@@ -84,6 +84,12 @@ public class LonLat {
 		return_str.append(",").append(String.valueOf(latitude));
 		return return_str.toString();
 	}
+	
+	public String toStringByColon() {
+		StringBuilder return_str = new StringBuilder(String.valueOf(longitude));
+		return_str.append(":").append(String.valueOf(latitude));
+		return return_str.toString();
+	}
 
 	/**
 	 * 百度地图坐标转gcj国家标准坐标

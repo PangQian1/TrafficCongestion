@@ -50,14 +50,14 @@ import util.Config;
 public class Main {
 	public static void main(String[] args) {
 		HashMap<String, RoadLink> id_Roadlink = Main.getTopology_ID_RoadLink_RoadName_Station(
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/Rbeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/Rbeijing.mif",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/other/PNamebeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/index/POIbeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/R_LNamebeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/R_Namebeijing.mid");
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/Rbeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/Rbeijing.mif",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/other/PNamebeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/index/POIbeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/R_LNamebeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/R_Namebeijing.mid");
 		try {
-			BufferedWriter writer=new BufferedWriter(new FileWriter("I:/programData/trafficCongetion/beijingTopology.csv"));//得到高速公路的网络拓扑图
+			BufferedWriter writer=new BufferedWriter(new FileWriter("E:/G-1149/trafficCongestion/beijingTopology_0710.csv"));//得到高速公路的网络拓扑图
 			for(Iterator<RoadLink> iterator=id_Roadlink.values().iterator();iterator.hasNext();){
 				RoadLink loop_roadlink=iterator.next();
 				writer.write(loop_roadlink.toString()+"\r\n");
@@ -337,8 +337,8 @@ public class Main {
 		// List<String> route_id_array = new ArrayList<String>(300);
 		try {
 			String line = null;
-			String Czhejiang2Mid="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mid";
-			String Czhejiang2Mif="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mif";
+			String Czhejiang2Mid="E:/G-1149/trafficCongestion\\北京地图数据\\beijing\\road\\Cbeijing.mid";
+			String Czhejiang2Mif="E:/G-1149\\trafficCongestion\\北京地图数据\\beijing\\road\\Cbeijing.mif";
 	    	Map<Integer,String> idWithPointMessage=new HashMap<>();
 	    	readCMid(Czhejiang2Mid,idWithPointMessage);//行号，进入linkID;退出linkID;CondType
 	    	Map<String,List<String>> mapGpsLinkId=addGpsPointCmid(Czhejiang2Mif,idWithPointMessage);//gps(lon lat),进入linkID；退出linkID

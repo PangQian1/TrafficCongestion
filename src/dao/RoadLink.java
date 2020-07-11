@@ -283,6 +283,16 @@ public class RoadLink {
 		return return_str.toString();
 	}
 
+	// 输出格式为
+	// ID,起点经度：起点纬度，经纬度序列，终点经度：终点纬度。
+	public String toStringForLonLat() {
+		StringBuilder return_str = new StringBuilder(ID);
+
+		return_str.append(",").append(getLonLatList());
+		return return_str.toString();
+	}
+	
+	
 	public String toString_Short() {   //这个函数返回简短版的路链性质，主要是为了突出同一条高速公路编号下的所有路链之和
 		StringBuilder return_str = new StringBuilder(ID);
 		return_str.append(",").append(length).append(",").append(highway_ID).append(",")
@@ -305,5 +315,26 @@ public class RoadLink {
 		else{
 			return lonlat_list.get(0);
 		}
+	}
+	
+	/**
+	 * 按照路链实际方向输出经纬度序列
+	 * @return lon1:lat1,lon2:lat2......lon_n:lat_n
+	 */
+	public String getLonLatList(){
+		String list = "";
+		int temp=lonlat_list.size();
+		if(direction==3){
+			for(int i = temp-1; i > 0; i--)
+				list += lonlat_list.get(i).toStringByColon() + ",";
+			
+			list += lonlat_list.get(0).toStringByColon();
+		}else{
+			for(int i = 0; i < temp-1; i++)	
+				list += lonlat_list.get(i).toStringByColon() + ",";
+			 
+			list += lonlat_list.get(temp-1).toStringByColon();
+		}
+		return list;
 	}
 }

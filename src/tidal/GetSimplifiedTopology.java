@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.SynchronousQueue;
 
 import dao.LonLat;
 import dao.RoadLink;
@@ -32,17 +33,19 @@ import util.Config;
 public class GetSimplifiedTopology {
 	public static void main(String[] args) {
 		HashMap<String, RoadLink> id_Roadlink = GetSimplifiedTopology.getTopology_ID_RoadLink_RoadName_Station(
-				"I:/programData/trafficCongetion/北京地图数据/beijing/Rbj.MID",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/Rbj.MIF",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/other/PNamebeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/index/POIbeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/R_LNamebeijing.mid",
-				"I:/programData/trafficCongetion/北京地图数据/beijing/road/R_Namebeijing.mid");
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/Rbj.MID",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/Rbj.MIF",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/other/PNamebeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/index/POIbeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/R_LNamebeijing.mid",
+				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/R_Namebeijing.mid");
 		try {
-			BufferedWriter writer=new BufferedWriter(new FileWriter("I:/programData/trafficCongetion/bjTopology.csv"));//得到高速公路的网络拓扑图
+			//BufferedWriter writer=new BufferedWriter(new FileWriter("I:/programData/trafficCongestion/bjTopology.csv"));//得到高速公路的网络拓扑图
+			BufferedWriter writer=new BufferedWriter(new FileWriter("E:/G-1149/trafficCongestion/LonLat.csv"));//得到link的经纬度序列
 			for(Iterator<RoadLink> iterator=id_Roadlink.values().iterator();iterator.hasNext();){
 				RoadLink loop_roadlink=iterator.next();
-				writer.write(loop_roadlink.toStringForTidal()+"\r\n");
+				//writer.write(loop_roadlink.toStringForTidal()+"\r\n");
+				writer.write(loop_roadlink.toStringForLonLat()+"\r\n");
 			}
 			writer.close();
 		} catch (Exception e) {
@@ -116,7 +119,7 @@ public class GetSimplifiedTopology {
 					lonLat_array.clear();
 					lonLat_array.add(s);
 				} else if (s.contains("Pen")) {
-					if (highway_lines.contains(mif_kuai)) {// 读到了高速公路的经纬度序列
+					if (highway_lines.contains(mif_kuai)) {// 读到了经纬度序列
 						List<LonLat> lonLat_list = new ArrayList<LonLat>();
 						int count = 0;
 						String lon = null, lat = null;
@@ -319,8 +322,8 @@ public class GetSimplifiedTopology {
 		// List<String> route_id_array = new ArrayList<String>(300);
 		try {
 			String line = null;
-			String Czhejiang2Mid="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mid";
-			String Czhejiang2Mif="I:\\programData\\trafficCongetion\\北京地图数据\\beijing\\road\\Cbeijing.mif";
+			String Czhejiang2Mid="E:/G-1149/trafficCongestion/北京地图数据/beijing/road/Cbeijing.mid";
+			String Czhejiang2Mif="E:/G-1149/trafficCongestion/北京地图数据/beijing/road/Cbeijing.mif";
 	    	Map<Integer,String> idWithPointMessage=new HashMap<>();
 	    	readCMid(Czhejiang2Mid,idWithPointMessage);//行号，进入linkID;退出linkID;CondType
 	    	Map<String,List<String>> mapGpsLinkId=addGpsPointCmid(Czhejiang2Mif,idWithPointMessage);//gps(lon lat),进入linkID；退出linkID
