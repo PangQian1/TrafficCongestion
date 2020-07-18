@@ -11,15 +11,10 @@ public class Test {
 
 	public static void main(String[] args) {
 
-	    System.out.println(CalTime("2019-09-02 18:59", "2019-09-02 19:03"));
+	    System.out.println(CalTime("2019-09-17 19:57", "2019-09-17 19:59"));
 		System.out.println(isWeekend("2018-03-04"));
 		System.out.println(201909021959L/10000);
 		
-		Instant instant = Instant.now();
-		Instant instantAfter = instant.minusSeconds(-300); //5∑÷÷”∫Û
-		Date date = Date.from(instantAfter);
-		System.out.println(date.toString());
-
 	}
 	public static void getNextDay(String day){
 		
