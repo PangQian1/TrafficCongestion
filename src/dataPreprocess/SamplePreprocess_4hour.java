@@ -25,7 +25,7 @@ import javax.print.DocFlavor.STRING;
 import org.omg.PortableServer.ServantActivator;
 import org.w3c.dom.ls.LSInput;
 
-public class SamplePreprocess {
+public class SamplePreprocess_4hour {
 	//2019年9,11,12三个月中节假日以及节假日的前一天and后一天
 	public static final HashSet<String> holiday = new HashSet<String>() {{
 		add("2019-09-12");
@@ -41,7 +41,6 @@ public class SamplePreprocess {
 	}}; 
 	//只要早晚高峰时期数据（为保证灵活性，分别往前往后各扩一个小时），共8个小时
 	public static final HashSet<String> peakHour = new HashSet<String>() {{
-		//add("06");add("07");add("08");add("09");add("16");add("17");add("18");add("19");
 		add("07");add("08");;add("17");add("18");
 	}};
 
@@ -50,29 +49,29 @@ public class SamplePreprocess {
 	public static void main(String[] args) {
 		String orderedTjamOriPath = "E:\\G-1149\\trafficCongestion\\训练数据\\时间顺序文件";
 		String orderedByLinkPath = "E:\\G-1149\\trafficCongestion\\训练数据\\时间顺序文件(按照link分类)";
-		String peakSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\peakSample.csv";
-		String filledInterSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\filledInterSample.csv";
-		String filledEdgeSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\filledEdgeSample.csv";
-		String resSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\resSample.csv";
-		String tempPath = "E:\\G-1149\\trafficCongestion\\训练数据\\temp2.csv";
+		String peakSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\peakSample.csv";
+		String filledInterSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\filledInterSample.csv";
+		String filledEdgeSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\filledEdgeSample.csv";
+		String resSamplePath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\resSample.csv";
+		String tempPath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\temp.csv";
 		
-		String linkPeerPath = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\linkPeer.csv";
-		String sample_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\Sample_2.csv";
-		String labelPath = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\label.csv";
-		String sample10_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\Sample10_2.csv";
-		String sample15_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\Sample15_2.csv";
-		String sample15_1_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\trainData\\Sample15_1.csv";
+		String linkPeerPath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\linkPeer.csv";
+		String sample_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\Sample_2.csv";
+		String labelPath = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\label.csv";
+		String sample10_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\Sample10_2.csv";
+		String sample10_1_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\Sample10_1.csv";
+		String sample15_2_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\Sample15_2.csv";
+		String sample15_1_Path = "E:\\G-1149\\trafficCongestion\\训练数据\\4小时文件\\trainData\\Sample15_1.csv";
 		
 		
 		//mergeDataByLink(orderedTjamOriPath, orderedByLinkPath);
 		//getPeakSample(orderedByLinkPath, peakSamplePath);
-		//fillInternelData(peakSamplePath, filledSamplePath);
+		//fillInternelData(peakSamplePath, filledInterSamplePath);
 		//fillEdgeData(filledInterSamplePath, filledEdgeSamplePath);
-		//checkData(filledEdgeSamplePath, tempPath);
-		//fillSameCycleData(filledEdgeSamplePath, resSamplePath, filledEdgeSamplePath);
+		//fillSameCycleData(filledEdgeSamplePath, resSamplePath);
 		//checkData(resSamplePath, tempPath);
-		//generateTrainableSample(resSamplePath, linkPeerPath, sample_2_Path, labelPath);
-		MergeByMin(sample_2_Path, sample15_1_Path, sample15_2_Path, 15);
+		generateTrainableSample(resSamplePath, linkPeerPath, sample_2_Path, labelPath);
+		//MergeByMin(sample_2_Path, sample10_1_Path, sample10_2_Path, 10);
 		
 		//System.out.println(subTimeByMin(formatTime("201909260959"), formatTime("201909261600")));
 		//System.out.println(getNextMin("201909230659"));
@@ -150,7 +149,7 @@ public class SamplePreprocess {
 			HashMap<String, HashMap<String,ArrayList<String>>> map = getSampleMap(resSamplePath);
 			ArrayList<String> linkPeerList = getLinkPeerList(linkPeerPath);//前40正样本，后31负样本
 			
-			int statusNum = 480;
+			int statusNum = 240;
 			for(int i = 0; i < linkPeerList.size(); i++){
 				String[] peer = linkPeerList.get(i).split(",");
 				if(!map.containsKey(peer[0]) || !map.containsKey(peer[1])){
@@ -273,7 +272,7 @@ public class SamplePreprocess {
 			
 			int qualified = 0;
 			int unqua = 0;
-			int sum = 480;
+			int sum = 240;
 			int count = 1;
 			String preLine = reader.readLine();
 			String preLink = preLine.split(",")[0];
@@ -437,40 +436,20 @@ public class SamplePreprocess {
 				String path = inPath + "/" + list.get(i);
 				InputStreamReader inStream = new InputStreamReader(new FileInputStream(path), "UTF-8");
 				BufferedReader reader = new BufferedReader(inStream);
-
-				int max = 0;
-				long preKey = 201909020603L;
-				String preLink = "85387316";
-				String preLine = "";
 				
 				String line = "";
 				String[] lineArray;
 				
 				while ((line = reader.readLine()) != null) {
 					lineArray = line.split(",");
-					String linkID = lineArray[0].trim();
-					String status = lineArray[2].trim();
 					String time = lineArray[1].trim();
-					
-					String day = formatTime(time).substring(0,10);
-					
+
 					//只筛选高峰时期的数据
 					String hour = time.substring(8,10);
 					if(!peakHour.contains(hour))continue;
 					
-					//该段工作是计算一下一个小时内次丢失数据的最长时间
-					long cur = Long.parseLong(time);
-					if((max < cur-preKey) && (cur/100==preKey/100) && (linkID.equals(preLink))){
-						max = (int) (cur-preKey);
-						preLine = line;
-					}
-					preLink = linkID;
-					preKey = cur;
-					
 					writer.write(line + "\n");
 				}
-				System.out.println(max);
-				System.out.println(preLine);
 				reader.close();
 			}
 			writer.flush();
@@ -581,7 +560,7 @@ public class SamplePreprocess {
 				//1、文件两端缺失数据
 				//情况1.1：文件开始，时间段开始缺数据
 				if(preLine.equals("")){
-					String begin = time.substring(0,8) + "0600";
+					String begin = time.substring(0,8) + "0700";
 					long miss = subTimeByMin(formatTime(begin), formatTime(time));
 					if(miss > 0 && miss <= rule){
 						String t = begin;
@@ -599,7 +578,7 @@ public class SamplePreprocess {
 				//情况2.1：文件中间，时间段结尾缺数据
 				//注意！！！！一定要先补充时间段结尾数据，才能补充时间段开始数据
 				if(!preLine.equals("") && !preHour.equals(hour) &&
-						(preHour.equals("09") || preHour.equals("19"))){
+						(preHour.equals("08") || preHour.equals("18"))){
 					String end = preTime.substring(0,10) + "59";
 					long miss = subTimeByMin(formatTime(preTime), formatTime(end));
 					if(miss > 0 && miss <= rule){
@@ -613,7 +592,7 @@ public class SamplePreprocess {
 				
 				//情况2.2：文件中间，时间段开始，缺数据
 				if(!preLine.equals("") && !preHour.equals(hour) &&
-						(hour.equals("06") || hour.equals("16"))){
+						(hour.equals("07") || hour.equals("17"))){
 					String begin = time.substring(0,10) + "00";
 					long miss = subTimeByMin(formatTime(begin), formatTime(time));
 					if(miss > 0 && miss <= rule){
@@ -642,15 +621,15 @@ public class SamplePreprocess {
 		System.out.println("******************数据处理完毕*************");
 	}
 	
-	public static void fillSameCycleData(String inPath, String outPath, String filledEdgeSamplePath){
-		HashMap<String, ArrayList<String>> map = getFillMap(filledEdgeSamplePath);
+	//这个方法a和b的值不对，有待解读
+	public static void fillSameCycleData(String inPath, String outPath){
+		HashMap<String, ArrayList<String>> map = getFillMap(inPath);
 		try {
 			InputStreamReader inStream = new InputStreamReader(new FileInputStream(inPath), "UTF-8");
 			BufferedReader reader = new BufferedReader(inStream);
 			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(outPath), "utf-8");
 			BufferedWriter writer = new BufferedWriter(writerStream);
-			
-			int max = 240;//填充的最大规格
+
 			int upLimit = 360;//10:00-16:00共6个小时
 			String preLine = reader.readLine();
 			String preLink = preLine.split(",")[0];
