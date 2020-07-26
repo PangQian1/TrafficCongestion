@@ -41,7 +41,7 @@ public class GetSimplifiedTopology {
 				"E:/G-1149/trafficCongestion/北京地图数据/beijing/road/R_Namebeijing.mid");
 		try {
 			//BufferedWriter writer=new BufferedWriter(new FileWriter("I:/programData/trafficCongestion/bjTopology.csv"));//得到高速公路的网络拓扑图
-			BufferedWriter writer=new BufferedWriter(new FileWriter("E:/G-1149/trafficCongestion/LonLat.csv"));//得到link的经纬度序列
+			BufferedWriter writer=new BufferedWriter(new FileWriter("E:/G-1149/trafficCongestion/网格化/LonLat_2.csv"));//得到link的经纬度序列
 			for(Iterator<RoadLink> iterator=id_Roadlink.values().iterator();iterator.hasNext();){
 				RoadLink loop_roadlink=iterator.next();
 				//writer.write(loop_roadlink.toStringForTidal()+"\r\n");
@@ -70,18 +70,7 @@ public class GetSimplifiedTopology {
 			while ((s = file_mid.readLine()) != null) {// 读MID文件
 				line++;
 				String[] s_array = s.split("\",\"|\""); // 用正则分隔这行
-				try{
-					
-					String a=s_array[4];
-					
-				}catch(Exception e)
-				{
-					
-					System.out.println(s);
-				}
-				
-				
-				
+			
 				// 判断direction 是否是双向的，即取值为2 or 3
 				if (s_array[6].equals("2") || s_array[6].equals("3")) {
 					highway_roadlink_id.add(s_array[2]);
@@ -114,11 +103,11 @@ public class GetSimplifiedTopology {
 				}
 			}
 			while ((s = file_mif.readLine()) != null) {// mif文件
-				if (s.contains("Line") || s.contains("Pline")) {
+				if (s.contains("Line") || s.contains("Pline")) {//开始新一轮经纬度序列
 					mif_kuai++;
 					lonLat_array.clear();
 					lonLat_array.add(s);
-				} else if (s.contains("Pen")) {
+				} else if (s.contains("Pen")) {//结束
 					if (highway_lines.contains(mif_kuai)) {// 读到了经纬度序列
 						List<LonLat> lonLat_list = new ArrayList<LonLat>();
 						int count = 0;
@@ -126,7 +115,8 @@ public class GetSimplifiedTopology {
 						for (String x : lonLat_array) {
 							String[] array_x = x.split(" ");
 							for (String str : array_x) {
-								if (str.contains(".")) {
+								if(str.equals("Pline")) break;
+								if (!str.contains("ine")) {
 									count++;
 									if (count % 2 != 0) {
 										lon = str;

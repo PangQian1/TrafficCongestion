@@ -71,8 +71,8 @@ public class SamplePreprocess {
 		//checkData(filledEdgeSamplePath, tempPath);
 		//fillSameCycleData(filledEdgeSamplePath, resSamplePath, filledEdgeSamplePath);
 		//checkData(resSamplePath, tempPath);
-		//generateTrainableSample(resSamplePath, linkPeerPath, sample_2_Path, labelPath);
-		MergeByMin(sample_2_Path, sample15_1_Path, sample15_2_Path, 15);
+		generateTrainableSample(resSamplePath, linkPeerPath, sample_2_Path, labelPath);
+		//MergeByMin(sample_2_Path, sample15_1_Path, sample15_2_Path, 15);
 		
 		//System.out.println(subTimeByMin(formatTime("201909260959"), formatTime("201909261600")));
 		//System.out.println(getNextMin("201909230659"));
@@ -169,8 +169,8 @@ public class SamplePreprocess {
 						}
 						s1 += dayMap_1.get(day).get(statusNum-1);
 						s2 += dayMap_2.get(day).get(statusNum-1);
-						//sampleWriter.write(peer[0]+","+day+"," + s1 + "\n");
-						//sampleWriter.write(peer[1]+","+day+"," + s2 + "\n");
+//						sampleWriter.write(peer[0]+","+day+"," + s1 + "\n");
+//						sampleWriter.write(peer[1]+","+day+"," + s2 + "\n");
 						sampleWriter.write(s1 + "\n");
 						sampleWriter.write(s2 + "\n");
 						

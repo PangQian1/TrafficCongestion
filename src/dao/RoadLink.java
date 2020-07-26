@@ -324,6 +324,11 @@ public class RoadLink {
 	public String getLonLatList(){
 		String list = "";
 		int temp=lonlat_list.size();
+		if(ID.equals("383813")){
+			System.out.println(temp);
+			for(int j=0;j<temp;j++)System.out.println(lonlat_list.get(j));
+		}
+		
 		if(direction==3){
 			for(int i = temp-1; i > 0; i--)
 				list += lonlat_list.get(i).toStringByColon() + ",";

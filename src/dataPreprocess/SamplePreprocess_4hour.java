@@ -71,7 +71,7 @@ public class SamplePreprocess_4hour {
 		//fillSameCycleData(filledEdgeSamplePath, resSamplePath);
 		//checkData(resSamplePath, tempPath);
 		generateTrainableSample(resSamplePath, linkPeerPath, sample_2_Path, labelPath);
-		MergeByMin(sample_2_Path, sample10_1_Path, sample10_2_Path, 10);
+		//MergeByMin(sample_2_Path, sample10_1_Path, sample10_2_Path, 10);
 		
 		//System.out.println(subTimeByMin(formatTime("201909260959"), formatTime("201909261600")));
 		//System.out.println(getNextMin("201909230659"));
