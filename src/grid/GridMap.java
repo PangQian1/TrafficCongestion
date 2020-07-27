@@ -3,9 +3,13 @@ package grid;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.sql.SQLNonTransientConnectionException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,17 +29,174 @@ public class GridMap {
 		String oriMapPath = "E:/G-1149/trafficCongestion/网格化/originMap.csv";
 		String linkAttrPath = "E:/G-1149/trafficCongestion/网格化/linkAttr.csv";
 		String linkNumPath = "E:/G-1149/trafficCongestion/网格化/linkNum.csv";//link,link经过的网格编号
+		String gridNumPath = "E:/G-1149/trafficCongestion/网格化/gridNum.csv";//网格编号，网格里有的link
+		String _02LinkMapPath = "E:/G-1149/trafficCongestion/网格化/02LinkMap.csv";
+		String linkStatusPath = "E:/G-1149/trafficCongestion/网格化/linkStatus_13_完整.csv";
+		String gridLinkPeerPath = "E:/G-1149/trafficCongestion/网格化/gridLinkPeer.csv";
 		
 		//getLinkAttr(lonLatPath, oriMapPath, linkAttrPath);//获得所需的link属性
-		getLinkGridNum(lonLatPath, linkNumPath);
+		//getLinkGridNum(lonLatPath, linkNumPath);
+		//getGridNumLink(linkNumPath, gridNumPath);
 		
-		
-//test		
-//		ArrayList<String> list = calInterCoor("116.57394:39.94026", "116.5793:39.94011", 4);
-//		for(int i = 0; i < list.size(); i++){
-//			System.out.println(list.get(i));
-//		}
-//		System.out.println((int)(0.456*10));
+		getGridLinkPeer(gridNumPath, _02LinkMapPath, linkAttrPath, linkStatusPath, gridLinkPeerPath);
+
+	}
+	
+	public static void getGridLinkPeer(String gridNumPath, String _02LinkMapPath, String linkAttrPath, String linkStatusPath, String gridLinkPeerPath){
+		HashMap<String, String> linkAttrMap = getLinkAttrMap(linkAttrPath);
+		HashSet<String> _02LinkSet = getLinkSet(_02LinkMapPath);
+		HashSet<String> linkStatusSet = getLinkSet(linkStatusPath);
+		try {
+			InputStreamReader inStream = new InputStreamReader(new FileInputStream(gridNumPath), "UTF-8");
+			BufferedReader reader = new BufferedReader(inStream);
+			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(gridLinkPeerPath), "utf-8");
+			BufferedWriter writer = new BufferedWriter(writerStream);
+
+			String line = "";
+			String[] lineArr;
+			while ((line = reader.readLine()) != null) {
+				lineArr = line.split(",");
+				int len = lineArr.length;
+				String gridNum = lineArr[0];
+				HashMap<String, HashMap<String, String>> gridMap = new HashMap<>();
+				for(int i = 1; i < len; i++){
+					String linkID = lineArr[i];
+					if(!_02LinkSet.contains(linkID) || !linkStatusSet.contains(linkID)) continue;
+					String dir = linkAttrMap.get(linkID).split(",")[0];
+					String kind = linkAttrMap.get(linkID).split(",")[1];
+					if(gridMap.containsKey(dir)){
+						HashMap<String, String> kindMap = gridMap.get(dir);
+						if(!kindMap.containsKey(kind)){//有可能好几条link有相同的dir和kind，但我们只需要一条就可，后续可在此做容错判断
+							kindMap.put(kind, linkID);
+						}
+						gridMap.put(dir, kindMap);
+					}else{
+						HashMap<String, String> kindMap = new HashMap<>();
+						kindMap.put(kind, linkID);
+						gridMap.put(dir, kindMap);
+					}
+				}
+				
+				writer.write(gridNum);
+				if(gridMap.containsKey("0") && gridMap.containsKey("2")){
+					HashMap<String, String> _0Map = gridMap.get("0");
+					HashMap<String, String> _2Map = gridMap.get("2");
+					for(String key1: _0Map.keySet()){
+						for(String key2: _2Map.keySet()){
+							if(key1.equals(key2)) writer.write("," + _0Map.get(key1) + "," + _2Map.get(key2));
+						}
+					}
+				}
+				if(gridMap.containsKey("1") && gridMap.containsKey("3")){
+					HashMap<String, String> _1Map = gridMap.get("1");
+					HashMap<String, String> _3Map = gridMap.get("3");
+					for(String key1: _1Map.keySet()){
+						for(String key2: _3Map.keySet()){
+							if(key1.equals(key2)) writer.write("," + _1Map.get(key1) + "," + _3Map.get(key2));
+						}
+					}
+				}
+				writer.write("\n");
+			}
+			
+			reader.close();
+			writer.flush();
+			writer.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(gridLinkPeerPath + " 写文件结束");
+	}
+	
+	public static HashMap<String, String> getLinkAttrMap(String path){
+		HashMap<String, String> map = new HashMap<>();
+		try {
+			InputStreamReader inStream = new InputStreamReader(new FileInputStream(path), "UTF-8");
+			BufferedReader reader = new BufferedReader(inStream);
+
+			String line = "";
+			String[] lineArr;
+			while ((line = reader.readLine()) != null) {
+				lineArr = line.split(",");
+				map.put(lineArr[0], lineArr[1] + "," + lineArr[3]);//方向+种别代码
+			}
+			
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return map;
+	}
+	public static HashSet<String> getLinkSet(String path){
+		HashSet<String> set = new HashSet<>();
+		try {
+			InputStreamReader inStream = new InputStreamReader(new FileInputStream(path), "UTF-8");
+			BufferedReader reader = new BufferedReader(inStream);
+
+			String line = "";
+			String[] lineArr;
+			while ((line = reader.readLine()) != null) {
+				lineArr = line.split(",");
+				set.add(lineArr[0]);//linkID
+			}
+			
+			reader.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return set;
+	}
+	
+	public static void getGridNumLink(String inPath, String outPath){
+		HashMap<String, String> gridMap = new HashMap<>();
+		try {
+			InputStreamReader inStream = new InputStreamReader(new FileInputStream(inPath), "UTF-8");
+			BufferedReader reader = new BufferedReader(inStream);
+
+			String line = "";
+			String[] lineArr;
+			while ((line = reader.readLine()) != null) {
+				lineArr = line.split(",");
+				int len = lineArr.length;
+				String linkID = lineArr[0];
+				
+				for(int i = 1; i < len; i++){
+					String gridNum = lineArr[i];
+					if(gridMap.containsKey(gridNum)){
+						String linkList = gridMap.get(gridNum);
+						linkList += ("," + linkID); 
+						gridMap.put(gridNum, linkList);
+					}else{
+						gridMap.put(gridNum, linkID);
+					}
+				}
+			}
+			
+			reader.close();
+			
+			writeData(gridMap, outPath);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(outPath + " 写文件结束");
+	}
+	
+	public static void writeData(HashMap<String, String> map, String path){
+		try {
+			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(path), "utf-8");
+			BufferedWriter writer = new BufferedWriter(writerStream);
+			
+			for(String key: map.keySet()){
+				writer.write(key + "," + map.get(key));
+				writer.write("\n");
+			}
+			
+			writer.flush();
+			writer.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
 	}
 	
 	/**

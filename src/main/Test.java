@@ -11,9 +11,11 @@ public class Test {
 
 	public static void main(String[] args) {
 
-	    System.out.println(CalTime("2019-09-17 19:57", "2019-09-17 19:59"));
-		System.out.println(isWeekend("2018-03-04"));
-		System.out.println(201909021959L/10000);
+//	    System.out.println(CalTime("2019-09-17 19:57", "2019-09-17 19:59"));
+//		System.out.println(isWeekend("2018-03-04"));
+//		System.out.println(201909021959L/10000);
+		
+		System.out.println("0002".split("\\|").length);
 		
 	}
 	public static void getNextDay(String day){
