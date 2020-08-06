@@ -41,10 +41,10 @@ public class DealRMidFile {
 				lineArr = line.split(",");
 				if(lineArr[4].equals("0") || lineArr[4].equals("1")) continue;//去掉双向可通行
 				String[] kind = lineArr[2].split("\\|");
-				boolean flag = true;
+				boolean flag = false;
 				for(int i = 0; i < kind.length; i++){
-					if(!kind[i].substring(2,4).equals("02")){//不是上下线分离
-						flag = false;
+					if(kind[i].substring(2,4).equals("02")){//上下线分离
+						flag = true;
 						break;
 					}
 				}

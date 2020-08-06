@@ -28,17 +28,18 @@ public class GridMap {
 		String lonLatPath = "E:/G-1149/trafficCongestion/网格化/LonLat.csv";
 		String oriMapPath = "E:/G-1149/trafficCongestion/网格化/originMap.csv";
 		String linkAttrPath = "E:/G-1149/trafficCongestion/网格化/linkAttr.csv";
-		String linkNumPath = "E:/G-1149/trafficCongestion/网格化/linkNum.csv";//link,link经过的网格编号
+		String linkNumPath = "E:/G-1149/trafficCongestion/网格化/linkNum_1.csv";//link,link经过的网格编号
+		String gridPoiPath = "E:/G-1149/trafficCongestion/网格化/gridPoi.csv";//网格编号及对应经纬度
 		String gridNumPath = "E:/G-1149/trafficCongestion/网格化/gridNum.csv";//网格编号，网格里有的link
 		String _02LinkMapPath = "E:/G-1149/trafficCongestion/网格化/02LinkMap.csv";
 		String linkStatusPath = "E:/G-1149/trafficCongestion/网格化/linkStatus_13_完整.csv";
-		String gridLinkPeerPath = "E:/G-1149/trafficCongestion/网格化/gridLinkPeer.csv";
+		String gridLinkPeerPath = "E:/G-1149/trafficCongestion/网格化/gridLinkPeer_13.csv";
 		
 		//getLinkAttr(lonLatPath, oriMapPath, linkAttrPath);//获得所需的link属性
-		//getLinkGridNum(lonLatPath, linkNumPath);
+		getLinkGridNum(lonLatPath, linkNumPath, gridPoiPath);
 		//getGridNumLink(linkNumPath, gridNumPath);
 		
-		getGridLinkPeer(gridNumPath, _02LinkMapPath, linkAttrPath, linkStatusPath, gridLinkPeerPath);
+		//getGridLinkPeer(gridNumPath, _02LinkMapPath, linkAttrPath, linkStatusPath, gridLinkPeerPath);
 
 	}
 	
@@ -204,20 +205,21 @@ public class GridMap {
 	 * @param inPath LonLat.csv
 	 * @param outPath linkNum.csv 组织格式： linkID，网格编号list
 	 */
-	public static void getLinkGridNum(String inPath, String outPath){
+	public static void getLinkGridNum(String inPath, String outPath, String gridPoiPath){
 		try {
 			InputStreamReader inStream = new InputStreamReader(new FileInputStream(inPath), "UTF-8");
 			BufferedReader reader = new BufferedReader(inStream);
 			OutputStreamWriter writerStream = new OutputStreamWriter(new FileOutputStream(outPath), "utf-8");
 			BufferedWriter writer = new BufferedWriter(writerStream);
-
+			
+			HashMap<String, String> gridPoiMap = new HashMap<>();//网格编号及对应经纬度
 			String line = "";
 			String[] lineArr;
 			while ((line = reader.readLine()) != null) {
 				lineArr = line.split(",");
 				String linkID = lineArr[0];
 				int size = lineArr.length;
-				ArrayList<String> numSet = new ArrayList<>();
+				ArrayList<String> numSet = new ArrayList<>();//link所经过的网格编号
 				
 				for(int i = 1; i < size-1; i++){
 					Double[] start = {Double.parseDouble(lineArr[i].split(":")[0]),Double.parseDouble(lineArr[i].split(":")[1])};
@@ -228,19 +230,26 @@ public class GridMap {
 						for(int j = 0; j < gpsList.size(); j++){
 							String num = getXY(gpsList.get(j).replace(":", ",")).split(",")[0];
 							if(!numSet.contains(num)) numSet.add(num);
+							
+							if(!gridPoiMap.containsKey(num)) gridPoiMap.put(num, gpsList.get(j));
 						}
 					}else{
 						String num = getXY(lineArr[i].replace(":", ",")).split(",")[0];
 						if(!numSet.contains(num)) numSet.add(num);
+						
+						if(!gridPoiMap.containsKey(num)) gridPoiMap.put(num, lineArr[i]);
 					}
 				}
 				
 				String num = getXY(lineArr[size-1].replace(":", ",")).split(",")[0];
 				if(!numSet.contains(num)) numSet.add(num);
+				if(!gridPoiMap.containsKey(num)) gridPoiMap.put(num, lineArr[size-1]);
 
 				String numList = "";
 				for(String str : numSet) numList += ("," + str);
 				writer.write(linkID + numList + "\n");
+				
+				writeData(gridPoiMap, gridPoiPath);
 			}
 			
 			reader.close();

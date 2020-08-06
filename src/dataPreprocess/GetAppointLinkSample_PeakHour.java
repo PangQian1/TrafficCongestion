@@ -30,13 +30,13 @@ public class GetAppointLinkSample_PeakHour {
 	public static String oriPath = "E:\\G-1149\\trafficCongestion\\res";//是一个文件夹目录(以一刻钟数据为单位)
 	public static String linkSamplePath = "C:\\Users\\98259\\Desktop\\6.9学习相关文档\\样本数据\\linkPeer.csv";
 	public static String samplePath = "C:\\Users\\98259\\Desktop\\6.9学习相关文档\\样本数据\\fiftMin\\samplePeakHour.csv";
-	public static String ori_13_Path = "E:\\G-1149\\trafficCongestion\\res\\weekDay\\13.csv";
+	public static String ori_14_Path = "E:\\G-1149\\trafficCongestion\\res\\weekDay\\14.csv";
 	public static String oriMapPath = "E:/G-1149/trafficCongestion/网格化/resMap.csv";
-	public static String linkStatus_13_Path = "E:/G-1149/trafficCongestion/网格化/linkStatus_13.csv";
+	public static String linkStatus_14_Path = "E:/G-1149/trafficCongestion/网格化/linkStatus_14.csv";
 	
 	public static void main(String[] args) {
 		//getSample(oriPath, linkSamplePath, samplePath);
-		getLinkStatus(ori_13_Path, linkStatus_13_Path, oriMapPath);
+		getLinkStatus(ori_14_Path, linkStatus_14_Path, oriMapPath);
 	}
 	
 	public static void getSample(String oriPath, String linkSamplePath, String samplePath){
