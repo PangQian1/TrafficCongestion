@@ -28,7 +28,7 @@ public class GridMap {
 		String lonLatPath = "E:/G-1149/trafficCongestion/网格化/LonLat.csv";
 		String oriMapPath = "E:/G-1149/trafficCongestion/网格化/originMap.csv";
 		String linkAttrPath = "E:/G-1149/trafficCongestion/网格化/linkAttr.csv";
-		String linkNumPath = "E:/G-1149/trafficCongestion/网格化/linkNum_1.csv";//link,link经过的网格编号
+		String linkNumPath = "E:/G-1149/trafficCongestion/网格化/linkNum.csv";//link,link经过的网格编号
 		String gridPoiPath = "E:/G-1149/trafficCongestion/网格化/gridPoi.csv";//网格编号及对应经纬度
 		String gridNumPath = "E:/G-1149/trafficCongestion/网格化/gridNum.csv";//网格编号，网格里有的link
 		String _02LinkMapPath = "E:/G-1149/trafficCongestion/网格化/02LinkMap.csv";

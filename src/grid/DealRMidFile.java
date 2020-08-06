@@ -24,7 +24,7 @@ public class DealRMidFile {
 		String resMapPath = "E:/G-1149/trafficCongestion/网格化/resMap.csv";
 		String _02LinkMapPath = "E:/G-1149/trafficCongestion/网格化/02LinkMap.csv";
 		
-		//dealRMidFile("E:\\G-1149\\trafficCongestion\\北京地图数据\\beijing\\dealedMap\\RbjWithoutDidir.MID", "D:\\program\\congestion\\originMapWithOutBiDirec.csv");
+		//dealRMidFile("E:\\G-1149\\trafficCongestion\\北京地图数据\\beijing\\dealedMap\\RbjWithoutDidir.MID", "D:\\program\\congestion\\网格化\\originMapWithOutBiDirec.csv");
 		//filteLink(oriMapPath, resMapPath);
 		get_02Link(oriMapPath, _02LinkMapPath);
 	}
